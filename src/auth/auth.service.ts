@@ -34,7 +34,7 @@ export class AuthService {
   async singIn(user: any): Promise<Auth> {
     return {
       user: classToPlain(new User(user)),
-      token: this.jwtService.sign({ username: user?.email, sub: user?.userId }),
+      token: this.jwtService.sign({ sub: user?.id }),
     };
   }
 }

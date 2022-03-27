@@ -1,5 +1,5 @@
 import { DatabaseService } from '@/shared/database/database.service';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -21,7 +21,13 @@ export class UserService {
     });
 
     if (userFound) {
-      throw new Error('user Already exists');
+      throw new HttpException(
+        {
+          status: HttpStatus.CONFLICT,
+          error: 'user Already exists',
+        },
+        HttpStatus.CONFLICT,
+      );
     }
 
     const userType = await this.db.userType.findFirst({
