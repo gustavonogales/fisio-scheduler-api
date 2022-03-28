@@ -12,7 +12,7 @@ datasource db {
 
 model UserType {
   id   String @id @default(uuid())
-  type String
+  type String @unique
 
   User User[]
   @@map("user_types")
