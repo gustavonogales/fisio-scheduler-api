@@ -27,6 +27,10 @@ export class AuthService {
   async validateUser({ email, password }: Credentials) {
     const user = await this.userService.findByEmail(email);
 
+    if (!user) {
+      return null;
+    }
+
     const passwordMatch = await this.hashService.compareHash(
       password,
       user.password,
