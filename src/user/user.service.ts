@@ -55,7 +55,10 @@ export class UserService {
   async findAll(type: string) {
     const users = await this.db.user.findMany({
       ...this.options,
-      ...(type ? { where: { userType: { type } } } : {}),
+      where: {
+        active: true,
+        ...(type ? { userType: { type } } : {}),
+      },
     });
 
     return classToPlain(users.map((user) => new User(user)));
@@ -80,17 +83,29 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
+    const userType = await this.db.userType.findFirst({
+      where: {
+        type: updateUserDto.type,
+      },
+    });
+
+    delete updateUserDto.type;
+
     const user = await this.db.user.update({
       ...this.options,
-      data: updateUserDto,
+      data: { ...updateUserDto, userTypeId: userType.id },
       where: { id },
     });
     return classToPlain(new User(user));
   }
 
   async remove(id: string) {
-    const user = await this.db.user.delete({
+    const user = await this.db.user.update({
       ...this.options,
+      data: {
+        email: id,
+        active: false,
+      },
       where: { id },
     });
     return classToPlain(new User(user));

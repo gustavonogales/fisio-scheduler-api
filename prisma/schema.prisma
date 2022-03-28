@@ -27,6 +27,7 @@ model User {
   updatedAt  DateTime @updatedAt
   userType   UserType @relation(fields: [userTypeId], references: [id])
   userTypeId String
+  active     Boolean  @default(true)
 
   userAppointments         Appointment[] @relation("clientUser")
   professionalAppointments Appointment[] @relation("professionalUser")

@@ -6,10 +6,10 @@ async function main() {
   await prisma.userType.createMany({
     data: [
       {
-        type: 'Profissional',
+        type: 'Professional',
       },
       {
-        type: 'Cliente',
+        type: 'Client',
       },
     ],
   });

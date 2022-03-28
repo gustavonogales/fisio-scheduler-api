@@ -16,6 +16,9 @@ export class User {
   @Exclude()
   password: string;
 
+  @Exclude()
+  active: boolean;
+
   @Expose({ name: 'type' })
   getType() {
     return this.userType.type;

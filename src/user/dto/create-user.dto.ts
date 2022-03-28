@@ -1,10 +1,12 @@
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { UserType } from '../types/user-type.enum';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -18,6 +20,6 @@ export class CreateUserDto {
   @MaxLength(20)
   password: string;
 
-  @IsString()
-  type: string;
+  @IsEnum(UserType)
+  type: UserType;
 }

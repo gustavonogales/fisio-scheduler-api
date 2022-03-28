@@ -6,8 +6,9 @@ import { UserService } from '@/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { Auth } from './entities/auth.entity';
 import { User } from '@/user/entities/user.entity';
-import { User as RepositoryUser } from '@prisma/client';
 import { HashService } from '@/shared/hash/hash.service';
+import { Request } from 'express';
+import { JwtPayloadDto } from './dto/JwtPayload.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,12 @@ export class AuthService {
     private jwtService: JwtService,
     private hashService: HashService,
   ) {}
+
+  decode(req: Request): JwtPayloadDto {
+    return this.jwtService.decode(
+      req.headers.authorization.split(' ')[1],
+    ) as JwtPayloadDto;
+  }
 
   async validateUser({ email, password }: Credentials) {
     const user = await this.userService.findByEmail(email);
@@ -34,7 +41,10 @@ export class AuthService {
   async singIn(user: any): Promise<Auth> {
     return {
       user: classToPlain(new User(user)),
-      token: this.jwtService.sign({ sub: user?.id }),
+      token: this.jwtService.sign({
+        sub: user?.id,
+        type: user?.userType?.type,
+      }),
     };
   }
 }
