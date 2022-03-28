@@ -22,7 +22,6 @@ import { AuthService } from '@/shared/auth/auth.service';
 export class AppointmentController {
   constructor(
     private readonly appointmentService: AppointmentService,
-    private jwtService: JwtService,
     private authService: AuthService,
   ) {}
 
@@ -45,8 +44,8 @@ export class AppointmentController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.appointmentService.findOne(id);
+  findOne(@Param('id') id: string, @Query('expand') expand: boolean) {
+    return this.appointmentService.findOne(id, expand);
   }
 
   @Patch(':id')

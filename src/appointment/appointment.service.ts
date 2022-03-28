@@ -67,8 +67,9 @@ export class AppointmentService {
     });
   }
 
-  findOne(id: string) {
+  findOne(id: string, expand: boolean) {
     return this.db.appointment.findUnique({
+      ...(expand ? { include: { client: true } } : {}),
       where: { id },
     });
   }
