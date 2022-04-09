@@ -8,12 +8,16 @@ import {
   Delete,
   Query,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '@/shared/auth/jwt.guard';
+import { User } from './entities/user.entity';
+import { TransformInterceptor } from '@/shared/transform.interceptor';
 
+@UseInterceptors(new TransformInterceptor(User))
 @UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {

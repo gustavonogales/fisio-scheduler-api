@@ -41,45 +41,37 @@ export class UserService {
       createUserDto.password,
     );
 
-    const createdUser = await this.db.user.create({
+    return this.db.user.create({
       ...this.options,
       data: {
         ...createUserDto,
         userTypeId: userType.id,
       },
     });
-
-    return classToPlain(new User(createdUser));
   }
 
   async findAll(type: string) {
-    const users = await this.db.user.findMany({
+    return this.db.user.findMany({
       ...this.options,
       where: {
         active: true,
         ...(type ? { userType: { type } } : {}),
       },
     });
-
-    return classToPlain(users.map((user) => new User(user)));
   }
 
   async findOne(id: string) {
-    const user = await this.db.user.findUnique({
+    return this.db.user.findUnique({
       ...this.options,
       where: { id },
     });
-
-    return classToPlain(new User(user));
   }
 
   async findByEmail(email: string) {
-    const user = await this.db.user.findUnique({
+    return this.db.user.findUnique({
       ...this.options,
       where: { email },
     });
-
-    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
@@ -91,16 +83,15 @@ export class UserService {
 
     delete updateUserDto.type;
 
-    const user = await this.db.user.update({
+    return this.db.user.update({
       ...this.options,
       data: { ...updateUserDto, userTypeId: userType.id },
       where: { id },
     });
-    return classToPlain(new User(user));
   }
 
   async remove(id: string) {
-    const user = await this.db.user.update({
+    return this.db.user.update({
       ...this.options,
       data: {
         email: id,
@@ -108,6 +99,5 @@ export class UserService {
       },
       where: { id },
     });
-    return classToPlain(new User(user));
   }
 }
