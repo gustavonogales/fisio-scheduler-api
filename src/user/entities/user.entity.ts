@@ -1,5 +1,5 @@
 import { UserType } from '@prisma/client';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Transform } from 'class-transformer';
 
 export class User {
   id: string;
@@ -7,7 +7,8 @@ export class User {
   email: string;
   createdAt: Date;
   updatedAt: Date;
-  @Exclude()
+
+  @Transform(({ value }) => value.type)
   userType: UserType;
 
   @Exclude()
@@ -18,11 +19,6 @@ export class User {
 
   @Exclude()
   active: boolean;
-
-  @Expose({ name: 'type' })
-  getType() {
-    return this.userType.type;
-  }
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);
